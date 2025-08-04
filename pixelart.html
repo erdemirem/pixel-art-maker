@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" />
+    <title>PIXEL ART</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      body {
+        background-color: #c5b9cd;
+      }
+      #pixel-container {
+        display: grid;
+        grid-template-columns: repeat(30, 20px);
+        grid-template-rows: repeat(30, 20px);
+        gap: 0;
+        margin: 20px;
+        justify-content: center;
+        background-color: #dec2cb;
+        border-radius: 500px;
+      }
+
+      .pixel {
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border: 1px solid #a2a1a1bd;
+      }
+
+      .pixel:hover {
+        background-color: #abb1cf;
+      }
+
+      #color-picker {
+        appearance: none;
+        -webkit-appearance: none;
+        border: 2px solid #7584d0;
+        background-color: transparent;
+        border-radius: 8px;
+        width: 150px;
+        height: 70px;
+        margin-left: 1200px;
+        cursor: pointer;
+        position: absolute;
+        top: 250px;
+        left: 10px;
+      }
+
+      #clear-btn {
+        width: auto;
+        height: 50px;
+        position: absolute;
+        margin-left: 1272px;
+        margin-top: -300px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #abb1cfc1;
+        border: 2px solid #7584d0;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+      }
+
+      #clear-btn:hover {
+        background-color: #e89bb3;
+      }
+
+      #fill-btn {
+        width: auto;
+        height: 50px;
+        position: absolute;
+        margin-left: 1215px;
+        margin-top: -460px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #abb1cfc1;
+        border: 2px solid #7584d0;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+      }
+
+      #fill-btn:hover {
+        background-color: #e89bb3;
+      }
+
+      #eraser-btn {
+        width: auto;
+        height: 50px;
+        position: absolute;
+        margin-left: 1207px;
+        margin-top: -300px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #abb1cfc1;
+        border: 2px solid #7584d0;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+      }
+
+      #eraser-btn:hover {
+        background-color: #e89bb3;
+      }
+
+      #brush-btn {
+        width: auto;
+        height: 50px;
+        position: absolute;
+        margin-left: 1132px;
+        margin-top: -380px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #abb1cfc1;
+        border: 2px solid #7584d0;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+      }
+
+      #brush-btn:hover {
+        background-color: #e89bb3;
+      }
+
+      .active {
+        background-color: #ab2c5f;
+        color: #941058;
+        border: 2px solid #7584d0;
+      }
+
+      #undo-btn {
+        width: auto;
+        height: 50px;
+        position: absolute;
+        margin-left: 1365px;
+        margin-top: -380px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background-color: #abb1cfc1;
+        border: 2px solid #7584d0;
+        font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+          "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        font-size: 15px;
+      }
+
+      #undo-btn:hover {
+        background-color: #e89bb3;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="color" id="color-picker" />
+    <div id="pixel-container"></div>
+
+    <button id="clear-btn">Temizle</button>;
+
+    <button id="fill-btn">Tümünü Boya</button>
+
+    <button id="eraser-btn">Silgi</button>
+
+    <button id="brush-btn">Fırça</button>
+
+    <button id="undo-btn">↪</button>
+
+    
+    <script>
+      const container = document.getElementById("pixel-container");
+      const colorPicker = document.getElementById("color-picker");
+      let activeColor = colorPicker.value;
+      let history = [];
+
+      const pixels = document.querySelectorAll(".pixel");
+      const clearBtn = document.getElementById("clear-btn");
+
+      colorPicker.addEventListener("input", function () {
+        activeColor = colorPicker.value;
+      });
+
+      for (let i = 0; i < 900; i++) {
+        const pixel = document.createElement("div");
+        pixel.classList.add("pixel");
+
+        pixel.addEventListener("click", function () {
+          history.push({
+            element: pixel,
+            previousColor: pixel.style.backgroundColor,
+          });
+          if (silgiModuAktif) {
+            pixel.style.backgroundColor = "white";
+          } else {
+            pixel.style.backgroundColor = activeColor;
+          }
+        });
+        container.appendChild(pixel);
+      }
+
+      clearBtn.addEventListener("click", function () {
+        const pixels = document.querySelectorAll(".pixel");
+        pixels.forEach((pixel) => {
+          pixel.style.backgroundColor = "white";
+        });
+      });
+
+      const fillBtn = document.getElementById("fill-btn");
+      fillBtn.addEventListener("click", function () {
+        const pixels = document.querySelectorAll(".pixel");
+        pixels.forEach((pixel) => {
+          pixel.style.backgroundColor = activeColor;
+        });
+      });
+
+      const eraserBtn = document.getElementById("eraser-btn");
+      let silgiModuAktif = false;
+
+      const brushBtn = document.getElementById("brush-btn");
+      brushBtn.addEventListener("click", function () {
+        silgiModuAktif = false;
+      });
+
+      eraserBtn.addEventListener("click", function () {
+        silgiModuAktif = !silgiModuAktif;
+
+        if (silgiModuAktif) {
+          eraserBtn.classList.add("active");
+          brushBtn.classList.remove("active");
+        } else {
+          eraserBtn.classList.remove("active");
+        }
+      });
+
+      brushBtn.addEventListener("click", function () {
+        silgiModuAktif = false;
+        brushBtn.classList.add("active");
+        eraserBtn.classList.remove("active");
+      });
+
+      const undoBtn = document.getElementById("undo-btn");
+
+      undoBtn.addEventListener("click", function () {
+        const lastAction = history.pop();
+        if (lastAction) {
+          lastAction.element.style.backgroundColor = lastAction.previousColor;
+        }
+      });
+    </script>
+  </body>
+</html>
